@@ -26,7 +26,6 @@ from metro.modeling.hrnet.config import update_config as hrnet_update_config
 import metro.modeling.data.config as cfg
 
 from metro.utils.renderer import (
-    Renderer,
     visualize_reconstruction,
     visualize_reconstruction_test,
     visualize_reconstruction_no_text,
@@ -38,6 +37,10 @@ from metro.utils.miscellaneous import mkdir, set_seed
 
 from PIL import Image
 from torchvision import transforms
+import sys
+sys.path = ['.'] + sys.path
+from elytra.rend_utils import Renderer
+
 
 transform = transforms.Compose(
     [
@@ -151,6 +154,7 @@ def visualize_mesh_and_attention(
         vertices_full,
         vertices,
         vertices_2d,
+        faces,
         cam,
         renderer,
         joints_2d,
@@ -270,6 +274,9 @@ def parse_args():
     return args
 
 
+faces = None
+
+
 def main(args):
     global logger
     # Setup CUDA, GPU & distributed training
@@ -287,7 +294,10 @@ def main(args):
     mano_model.layer = mano_model.layer.cuda()
     mesh_sampler = Mesh()
     # Renderer for visualization
-    renderer = Renderer(faces=mano_model.face)
+    #renderer = Renderer(faces=mano_model.face)
+    global faces
+    faces = mano_model.face
+    renderer = Renderer(224)
 
     # Load pretrained model
     logger.info("Inference: Loading from checkpoint {}".format(args.resume_checkpoint))

@@ -14,7 +14,11 @@ import code
 from opendr.camera import ProjectPoints
 from opendr.renderer import ColoredRenderer, TexturedRenderer
 from opendr.lighting import LambertianPointLight
+import trimesh
 import random
+import sys
+sys.path = ['.'] + sys.path
+import elytra.rend_utils as rend_utils
 
 
 # Rotate the points by a specified angle.
@@ -495,7 +499,6 @@ def visualize_reconstruction_and_att(
             combined = np.hstack([combined, image])
 
     final = np.hstack([img, combined, rend_img])
-
     return final
 
 
@@ -505,6 +508,7 @@ def visualize_reconstruction_and_att_local(
     vertices_full,
     vertices,
     vertices_2d,
+    faces,
     camera,
     renderer,
     ref_points,
@@ -521,14 +525,15 @@ def visualize_reconstruction_and_att_local(
     camera_t = np.array(
         [camera[1], camera[2], 2 * focal_length / (res * camera[0] + 1e-9)]
     )
-    rend_img = renderer.render(
-        vertices_full,
-        camera_t=camera_t,
-        img=img,
-        use_bg=True,
-        focal_length=focal_length,
-        body_color=color,
-    )
+    mesh = trimesh.Trimesh(vertices=vertices_full, faces=faces, process=False)
+    K = np.array([
+        [focal_length, 0, 112.0],
+        [0, focal_length, 112.0],
+        [0, 0, 1.0],
+        ],dtype=np.float32)
+    material = rend_utils.color2material([100.0, 100.0, 100.0])
+    rend_img = renderer.render_meshes_pose([mesh], None, camera_t, K, [material], None)
+
     heads_num, vertex_num, _ = attention.shape
     all_head = np.zeros((vertex_num, vertex_num))
 
@@ -588,7 +593,10 @@ def visualize_reconstruction_and_att_local(
         else:
             combined = np.hstack([combined, image])
 
-    final = np.hstack([img, combined, rend_img])
+    alpha = 0.5
+    overlay_img = alpha  * img + (1-alpha) *rend_img
+    overlay_comb = alpha * img + (1-alpha) *combined
+    final = np.hstack([img, overlay_comb, overlay_img])
 
     return final
 
@@ -653,7 +661,7 @@ def plot_one_line(ref, vertex, img, color_index, alpha=0.0, line_thickness=None)
         thickness=tl,
         lineType=cv2.LINE_AA,
     )
-    cv2.addWeighted(overlay, alpha, img, 1 - alpha, 0, img)
+    cv2.addWeighted(overlay.copy(), alpha, img.copy(), 1 - alpha, 0, img)
 
 
 def cam2pixel(cam_coord, f, c):

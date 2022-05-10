@@ -3,7 +3,7 @@ import copy
 import trimesh
 import pyrender
 import numpy as np
-import pytorch3d.transforms as tf
+#import pytorch3d.transforms as tf
 
 # offline rendering
 os.environ["PYOPENGL_PLATFORM"] = "egl"
@@ -43,7 +43,6 @@ class Renderer:
         meshes,
         image=None,
         cam_transl=None,
-        cam_center=None,
         K=None,
         materials=None,
         sideview_angle=None,
@@ -100,7 +99,6 @@ class Renderer:
         meshes,
         image=None,
         cam_transl=None,
-        cam_center=None,
         K=None,
         sideview_angle=None,
         no_anchor=False,
