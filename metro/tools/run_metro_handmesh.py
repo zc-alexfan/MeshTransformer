@@ -5,8 +5,8 @@ Licensed under the MIT license.
 Training and evaluation codes for 
 3D hand mesh reconstruction from an image
 """
-
 from __future__ import absolute_import, division, print_function
+from comet_ml import Experiment
 import argparse
 import os
 import os.path as op
@@ -35,6 +35,9 @@ from metro.utils.metric_logger import AverageMeter
 from metro.utils.renderer import Renderer, visualize_reconstruction, visualize_reconstruction_test, visualize_reconstruction_no_text
 from metro.utils.metric_pampjpe import reconstruction_error
 from metro.utils.geometric_layers import orthographic_projection
+import sys
+sys.path = ['.'] + sys.path
+import elytra.comet_utils as comet_utils
 
 def save_checkpoint(model, args, epoch, iteration, num_trial=10):
     checkpoint_dir = op.join(args.output_dir, 'checkpoint-{}-{}'.format(
@@ -125,6 +128,15 @@ def run(args, train_dataloader, METRO_model, mano_model, renderer, mesh_sampler)
             output_device=args.local_rank,
             find_unused_parameters=True,
         )
+    if args.local_rank == 0:
+        experiment = Experiment(
+            api_key="gkEjEq3RpV8xNYREIdqxBJ3aw",
+            project_name="metro",
+            workspace="zc-alexfan",
+        )
+    else:
+        experiment = None
+
 
     start_training_time = time.time()
     end = time.time()
@@ -229,6 +241,12 @@ def run(args, train_dataloader, METRO_model, mano_model, renderer, mesh_sampler)
                     log_losses.avg, log_loss_2djoints.avg, log_loss_3djoints.avg, log_loss_vertices.avg, batch_time.avg, data_time.avg, 
                     optimizer.param_groups[0]['lr'])
             )
+
+            loss_dict = {
+                    'total_loss': log_losses.avg, 'loss_2d': log_loss_2djoints.avg, 'loss_3d': log_loss_3djoints.avg, 'loss_v': log_loss_vertices.avg
+                    }
+            comet_utils.log_dict(experiment, loss_dict, step=iteration, postfix='_train')
+
 
             visual_imgs = visualize_mesh(   renderer,
                                             annotations['ori_img'].detach(),
