@@ -96,7 +96,7 @@ def random_cmap(
             ticks=None,
             boundaries=bounds,
             format="%1i",
-            orientation=u"horizontal",
+            orientation="horizontal",
         )
 
     return random_colormap

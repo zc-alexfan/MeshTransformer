@@ -3,7 +3,8 @@ import copy
 import trimesh
 import pyrender
 import numpy as np
-#import pytorch3d.transforms as tf
+
+# import pytorch3d.transforms as tf
 
 # offline rendering
 os.environ["PYOPENGL_PLATFORM"] = "egl"
@@ -115,7 +116,6 @@ class Renderer:
         meshes = flip_meshes(meshes)
 
         if sideview_angle is not None:
-
             rot = trimesh.transformations.rotation_matrix(
                 np.radians(sideview_angle), [0, 1, 0]
             )

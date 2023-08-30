@@ -78,7 +78,7 @@ def load_pickle(path):
 
 
 def dump_pickle(path, obj):
-    with (open(path, "wb")) as f:
+    with open(path, "wb") as f:
         pickle.dump(obj, f)
 
 

@@ -44,7 +44,6 @@ class HandMeshTSVDataset(object):
         cv2_output=False,
         scale_factor=1,
     ):
-
         self.args = args
         self.img_file = img_file
         self.label_file = label_file
@@ -267,7 +266,6 @@ class HandMeshTSVDataset(object):
             return len(self.line_list)
 
     def __getitem__(self, idx):
-
         img = self.get_image(idx)
         img_key = self.get_img_key(idx)
         annotations = self.get_annotations(idx)

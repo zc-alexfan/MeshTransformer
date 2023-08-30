@@ -11,13 +11,17 @@ from __future__ import print_function
 import numpy as np
 import cv2
 import code
+
+"""
 from opendr.camera import ProjectPoints
 from opendr.renderer import ColoredRenderer, TexturedRenderer
 from opendr.lighting import LambertianPointLight
+"""
 import trimesh
 import random
 import sys
-sys.path = ['.'] + sys.path
+
+sys.path = ["."] + sys.path
 import elytra.rend_utils as rend_utils
 
 
@@ -526,11 +530,14 @@ def visualize_reconstruction_and_att_local(
         [camera[1], camera[2], 2 * focal_length / (res * camera[0] + 1e-9)]
     )
     mesh = trimesh.Trimesh(vertices=vertices_full, faces=faces, process=False)
-    K = np.array([
-        [focal_length, 0, 112.0],
-        [0, focal_length, 112.0],
-        [0, 0, 1.0],
-        ],dtype=np.float32)
+    K = np.array(
+        [
+            [focal_length, 0, 112.0],
+            [0, focal_length, 112.0],
+            [0, 0, 1.0],
+        ],
+        dtype=np.float32,
+    )
     material = rend_utils.color2material([100.0, 100.0, 100.0])
     rend_img = renderer.render_meshes_pose([mesh], None, camera_t, K, [material], None)
 
@@ -551,6 +558,7 @@ def visualize_reconstruction_and_att_local(
         selected_joints = [7]  # [6,7,4,5,13,12]
     else:  # hand
         selected_joints = [0]  # [0, 4, 8, 12, 16, 20]
+    """
     # Draw attention
     for ii in range(len(selected_joints)):
         reference_id = selected_joints[ii]
@@ -592,11 +600,13 @@ def visualize_reconstruction_and_att_local(
             combined = image
         else:
             combined = np.hstack([combined, image])
+    """
 
     alpha = 0.5
-    overlay_img = alpha  * img + (1-alpha) *rend_img
-    overlay_comb = alpha * img + (1-alpha) *combined
-    final = np.hstack([img, overlay_comb, overlay_img])
+    img = img.astype(np.float32)
+    rend_img = rend_img.astype(np.float32)
+    overlay_img = alpha * img + (1 - alpha) * rend_img
+    final = np.hstack([img, overlay_img])
 
     return final
 

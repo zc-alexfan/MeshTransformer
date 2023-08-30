@@ -139,7 +139,6 @@ def visualize_mesh_and_attention(
     pred_camera,
     attention,
 ):
-
     """Tensorboard logging."""
 
     img = images.cpu().numpy().transpose(1, 2, 0)

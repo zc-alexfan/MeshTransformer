@@ -134,7 +134,6 @@ def vertices_loss(criterion_vertices, pred_vertices, gt_vertices, has_smpl):
 
 
 def run(args, train_dataloader, METRO_model, mano_model, renderer, mesh_sampler):
-
     max_iter = len(train_dataloader)
     iters_per_epoch = max_iter // args.num_train_epochs
 
@@ -177,7 +176,6 @@ def run(args, train_dataloader, METRO_model, mano_model, renderer, mesh_sampler)
     log_loss_vertices = AverageMeter()
 
     for iteration, (img_keys, images, annotations) in enumerate(train_dataloader):
-
         METRO_model.train()
         iteration += 1
         epoch = iteration // iters_per_epoch
@@ -356,7 +354,6 @@ def run(args, train_dataloader, METRO_model, mano_model, renderer, mesh_sampler)
 def run_eval_and_save(
     args, split, val_dataloader, METRO_model, mano_model, renderer, mesh_sampler
 ):
-
     criterion_keypoints = torch.nn.MSELoss(reduction="none").cuda(args.device)
     criterion_vertices = torch.nn.L1Loss().cuda(args.device)
 

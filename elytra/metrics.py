@@ -26,7 +26,7 @@ def compute_similarity_transform(S1, S2):
     X2 = S2 - mu2
 
     # 2. Compute variance of X1 used for scale.
-    var1 = np.sum(X1 ** 2)
+    var1 = np.sum(X1**2)
 
     # 3. The outer product of X1 and X2.
     K = X1.dot(X2.T)
@@ -224,7 +224,6 @@ def pts_inside_box_torch(pts, bbox):
 
 
 def iou_3d_torch(bbox1, bbox2, dev, nres):
-
     """
     This function compute the 3D IoU between two bounding boxes.
     Bounding box corners should be defined in this order:

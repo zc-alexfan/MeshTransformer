@@ -534,7 +534,6 @@ def setup_scene():
 
 
 def setup_compositing():
-
     global compositor_image_scale
     global compositor_alpha
 
@@ -898,12 +897,10 @@ def blender_viewer_fn(
 ##############################################################################
 
 if __name__ == "__main__":
-
     texture_dir = ""
 
     try:
         if bpy.app.background:
-
             texture_dir = os.path.join(
                 os.path.dirname(os.path.realpath(__file__)), "textures"
             )

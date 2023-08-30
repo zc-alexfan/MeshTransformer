@@ -17,16 +17,15 @@ if op.dirname(this_file):
     os.chdir(op.dirname(this_file))
 script_dir = os.getcwd()
 
+
 def readme(fname):
-    """Read text out of a file in the same directory as setup.py.
-    """
+    """Read text out of a file in the same directory as setup.py."""
     return open(op.join(script_dir, fname)).read()
 
 
 def find_version(fname):
     version_file = readme(fname)
-    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
-                              version_file, re.M)
+    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", version_file, re.M)
     if version_match:
         return version_match.group(1)
     raise RuntimeError("Unable to find version string.")
@@ -36,11 +35,11 @@ setup(
     name="metro",
     version=find_version("metro/__init__.py"),
     description="METRO",
-    long_description=readme('README.md'),
+    long_description=readme("README.md"),
     packages=find_packages(),
     classifiers=[
-        'Intended Audience :: Developers',
+        "Intended Audience :: Developers",
         "Programming Language :: Python",
-        'Topic :: Software Development',
-    ]
+        "Topic :: Software Development",
+    ],
 )

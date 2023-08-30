@@ -38,7 +38,8 @@ from metro.utils.miscellaneous import mkdir, set_seed
 from PIL import Image
 from torchvision import transforms
 import sys
-sys.path = ['.'] + sys.path
+
+sys.path = ["."] + sys.path
 from elytra.rend_utils import Renderer
 
 
@@ -116,12 +117,20 @@ def run_inference(args, image_list, _metro_network, mano, renderer, mesh_sampler
                 att[-1][0].detach(),
             )
 
+            # save vis
             visual_imgs = visual_imgs_att.transpose(1, 2, 0)
             visual_imgs = np.asarray(visual_imgs)
+            out_p = image_file.replace("/crop_image/", "/metro_vis/")
+            os.makedirs(os.path.dirname(out_p), exist_ok=True)
+            cv2.imwrite(out_p, np.asarray(visual_imgs[:, :, ::-1] * 255))
 
-            temp_fname = image_file[:-4] + "_metro_pred.jpg"
-            print("save to ", temp_fname)
-            cv2.imwrite(temp_fname, np.asarray(visual_imgs[:, :, ::-1] * 255))
+            # save vertices
+            v3d_ra = pred_vertices[0].cpu().detach().numpy()
+            out_p = image_file.replace("/crop_image/", "/metro/").replace(
+                ".jpg", ".npy"
+            )
+            os.makedirs(os.path.dirname(out_p), exist_ok=True)
+            np.save(out_p, v3d_ra)
 
     return
 
@@ -136,7 +145,6 @@ def visualize_mesh_and_attention(
     pred_camera,
     attention,
 ):
-
     """Tensorboard logging."""
 
     img = images.cpu().numpy().transpose(1, 2, 0)
@@ -294,7 +302,7 @@ def main(args):
     mano_model.layer = mano_model.layer.cuda()
     mesh_sampler = Mesh()
     # Renderer for visualization
-    #renderer = Renderer(faces=mano_model.face)
+    # renderer = Renderer(faces=mano_model.face)
     global faces
     faces = mano_model.face
     renderer = Renderer(224)

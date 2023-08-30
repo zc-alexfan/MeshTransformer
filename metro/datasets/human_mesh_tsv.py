@@ -42,7 +42,6 @@ class MeshTSVDataset(object):
         cv2_output=False,
         scale_factor=1,
     ):
-
         self.img_file = img_file
         self.label_file = label_file
         self.hw_file = hw_file
@@ -267,7 +266,6 @@ class MeshTSVDataset(object):
             return len(self.line_list)
 
     def __getitem__(self, idx):
-
         img = self.get_image(idx)
         img_key = self.get_img_key(idx)
         annotations = self.get_annotations(idx)

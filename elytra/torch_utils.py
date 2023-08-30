@@ -275,6 +275,7 @@ def list2dev(L, dev):
     assert isinstance(L, list)
     return [thing2dev(ten, dev) for ten in L]
 
+
 def thing2dev(thing, dev):
     if isinstance(thing, list):
         return list2dev(thing, dev)
@@ -285,6 +286,7 @@ def thing2dev(thing, dev):
     if isinstance(thing, torch.Tensor):
         return thing.to(dev)
     return thing
+
 
 def dict2dev(d: dict, dev, selected_keys=None) -> dict:
     """

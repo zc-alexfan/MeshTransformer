@@ -58,7 +58,6 @@ class METRO_Encoder(BertPreTrainedModel):
         position_ids=None,
         head_mask=None,
     ):
-
         batch_size = len(img_feats)
         seq_length = len(img_feats[0])
         input_ids = torch.zeros([batch_size, seq_length], dtype=torch.long).cuda()

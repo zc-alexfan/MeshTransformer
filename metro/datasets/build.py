@@ -74,7 +74,6 @@ def make_data_sampler(dataset, shuffle, distributed):
 def make_data_loader(
     args, yaml_file, is_distributed=True, is_train=True, start_iter=0, scale_factor=1
 ):
-
     dataset = build_dataset(
         yaml_file, args, is_train=is_train, scale_factor=scale_factor
     )
@@ -122,7 +121,6 @@ def build_hand_dataset(yaml_file, args, is_train=True, scale_factor=1):
 def make_hand_data_loader(
     args, yaml_file, is_distributed=True, is_train=True, start_iter=0, scale_factor=1
 ):
-
     dataset = build_hand_dataset(
         yaml_file, args, is_train=is_train, scale_factor=scale_factor
     )

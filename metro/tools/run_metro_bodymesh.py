@@ -235,7 +235,6 @@ def run(
     log_eval_metrics = EvalMetricsLogger()
 
     for iteration, (img_keys, images, annotations) in enumerate(train_dataloader):
-
         METRO_model.train()
         iteration += 1
         epoch = iteration // iters_per_epoch

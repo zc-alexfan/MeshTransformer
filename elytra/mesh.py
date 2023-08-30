@@ -31,7 +31,6 @@ class Mesh(trimesh.Trimesh):
         smooth=False,
         **kwargs
     ):
-
         self.wireframe = wireframe
         self.smooth = smooth
 
@@ -62,7 +61,6 @@ class Mesh(trimesh.Trimesh):
         return np.array(vertices * rxyz.T)
 
     def colors_like(self, color, array, ids):
-
         color = np.array(color)
 
         if color.max() <= 1.0:
@@ -81,7 +79,6 @@ class Mesh(trimesh.Trimesh):
         return new_color
 
     def set_vertex_colors(self, vc, vertex_ids=None):
-
         all_ids = np.arange(self.vertices.shape[0])
         if vertex_ids is None:
             vertex_ids = all_ids
@@ -91,7 +88,6 @@ class Mesh(trimesh.Trimesh):
         self.visual.vertex_colors[:] = new_vc
 
     def set_face_colors(self, fc, face_ids=None):
-
         if face_ids is None:
             face_ids = np.arange(self.faces.shape[0])
 

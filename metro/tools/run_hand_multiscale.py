@@ -93,7 +93,6 @@ def multiscale_fusion(output_dir):
 
 
 def run_multiscale_inference(model_path, mode, output_dir):
-
     if mode == True:
         rotations = [0.0]
         for i in range(1, 10):

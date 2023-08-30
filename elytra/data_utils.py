@@ -11,6 +11,7 @@ import albumentations as A
 from elytra.geometry import perspective_projection
 from scipy.spatial import Delaunay
 
+
 # https://stackoverflow.com/questions/16750618/whats-an-efficient-way-to-find-if-a-point-lies-in-the-convex-hull-of-a-point-cl
 def in_hull(p, hull):
     """
@@ -610,7 +611,6 @@ def crop_kp2d(kp2d, cx, cy, dim):
 def get_aug_intrix(
     intrx, fixed_focal: float, img_res, use_gt_k, bbox_cx, bbox_cy, scale
 ):
-
     """
     This function returns camera intrinsics under scaling.
     If use_gt_k, the GT K is used, but scaled based on the amount of scaling in the patch.

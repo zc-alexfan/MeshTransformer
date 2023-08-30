@@ -47,7 +47,6 @@ def myimrotate(img, angle, center=None, scale=1.0, border_value=0, auto_bound=Fa
 
 
 def myimresize(img, size, return_scale=False, interpolation="bilinear"):
-
     h, w = img.shape[:2]
     resized_img = cv2.resize(img, (size[0], size[1]), interpolation=cv2.INTER_LINEAR)
     if not return_scale:

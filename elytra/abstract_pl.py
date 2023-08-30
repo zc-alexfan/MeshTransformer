@@ -232,7 +232,9 @@ class AbstractPL(pl.LightningModule):
         )
         return [optimizer], [scheduler]
 
-    def visualize_batches(self, batches, postfix, num_examples, no_tqdm=True, dump_vis=False):
+    def visualize_batches(
+        self, batches, postfix, num_examples, no_tqdm=True, dump_vis=False
+    ):
         im_list = []
         if self.training:
             self.eval()
@@ -254,11 +256,13 @@ class AbstractPL(pl.LightningModule):
 
         if dump_vis:
             for curr_im in im_list:
-                out_p = op.join('demo', curr_im['fig_name'].replace('__rend_demo', '.png'))
+                out_p = op.join(
+                    "demo", curr_im["fig_name"].replace("__rend_demo", ".png")
+                )
                 out_folder = op.dirname(out_p)
                 os.makedirs(out_folder, exist_ok=True)
                 print(out_p)
-                curr_im['im'].save(out_p)
+                curr_im["im"].save(out_p)
 
         self.push_images(experiment, im_list, self.global_step)
         print("Done rendering (%.1fs)" % (time.time() - tic))
