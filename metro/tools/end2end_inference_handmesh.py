@@ -17,6 +17,8 @@ import torchvision.models as models
 from torchvision.utils import make_grid
 import numpy as np
 import cv2
+import sys
+sys.path = ['.'] + sys.path
 from metro.modeling.bert import BertConfig, METRO
 from metro.modeling.bert import METRO_Hand_Network as METRO_Network
 from metro.modeling._mano import MANO, Mesh
@@ -61,6 +63,9 @@ def run_inference(args, image_list, _metro_network, mano, renderer, mesh_sampler
     # switch to evaluate mode
     _metro_network.eval()
 
+
+    j2d_list = []
+    v3d_ra_list = []
     for image_file in image_list:
         if "pred" not in image_file:
             att_all = []
@@ -85,6 +90,8 @@ def run_inference(args, image_list, _metro_network, mano, renderer, mesh_sampler
                 pred_3d_joints_from_mesh - pred_3d_pelvis[:, None, :]
             )
             pred_vertices = pred_vertices - pred_3d_pelvis[:, None, :]
+            
+
 
             # save attantion
             att_max_value = att[-1]
@@ -97,14 +104,12 @@ def run_inference(args, image_list, _metro_network, mano, renderer, mesh_sampler
             pred_2d_joints_from_mesh = orthographic_projection(
                 pred_3d_joints_from_mesh.contiguous(), pred_camera.contiguous()
             )
+
             pred_2d_coarse_vertices_from_mesh = orthographic_projection(
                 pred_vertices_sub.contiguous(), pred_camera.contiguous()
             )
 
-            # visual_imgs = visualize_mesh_no_text(renderer,
-            #                     batch_visual_imgs[0],
-            #                     pred_vertices[0].detach(),
-            #                     pred_camera.detach())
+
 
             visual_imgs_att = visualize_mesh_and_attention(
                 renderer,
@@ -128,10 +133,24 @@ def run_inference(args, image_list, _metro_network, mano, renderer, mesh_sampler
             v3d_ra = pred_vertices[0].cpu().detach().numpy()
             out_p = image_file.replace("/crop_image/", "/metro/").replace(
                 ".jpg", ".npy"
-            )
-            os.makedirs(os.path.dirname(out_p), exist_ok=True)
-            np.save(out_p, v3d_ra)
+            ).replace('.png', '.npy')
 
+            
+            v3d_ra_list.append(v3d_ra)
+
+            
+            j2d_list.append(pred_2d_joints_from_mesh[0].cpu().detach().numpy())
+    v3d_ra_list = np.array(v3d_ra_list).astype(np.float32)
+    j2d_list = np.array(j2d_list).astype(np.float32)
+    img_size = 224.0
+    j2d_list = ((j2d_list + 1) * 0.5) * img_size
+    
+    out_dir = op.join(os.path.dirname(out_p), '..')
+    # normalize path
+    out_dir = op.normpath(out_dir)
+    np.save(op.join(out_dir, "v3d_ra.npy"), v3d_ra_list)
+    np.save(op.join(out_dir, "j2d.crop.npy"), j2d_list)
+    print(f"Saved to {out_dir}")
     return
 
 
@@ -428,6 +447,8 @@ def main(args):
                 image_list.append(args.image_file_or_path + "/" + filename)
     else:
         raise ValueError("Cannot find images at {}".format(args.image_file_or_path))
+
+    image_list = sorted(image_list)
 
     run_inference(args, image_list, _metro_network, mano_model, renderer, mesh_sampler)
 

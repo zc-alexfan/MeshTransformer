@@ -539,6 +539,7 @@ def visualize_reconstruction_and_att_local(
         dtype=np.float32,
     )
     material = rend_utils.color2material([100.0, 100.0, 100.0])
+
     rend_img = renderer.render_meshes_pose([mesh], None, camera_t, K, [material], None)
 
     heads_num, vertex_num, _ = attention.shape
