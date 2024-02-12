@@ -1,5 +1,7 @@
 # MeshTransformer ✨
 
+**This repo is a private folk of [MeshTransformer](https://github.com/microsoft/MeshTransformer) by Kevin Lin.**
+
 This is our research code of [End-to-End Human Pose and Mesh Reconstruction with Transformers](https://arxiv.org/abs/2012.09760). 
 
 MEsh TRansfOrmer is a simple yet effective transformer-based method for human pose and mesh reconsruction from an input image. In this repository, we provide our research code for training and testing our proposed method for the following tasks:
